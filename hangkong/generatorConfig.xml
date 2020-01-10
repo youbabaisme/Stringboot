@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <context id="testTables" targetRuntime="MyBatis3">
+        <commentGenerator>
+            <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+            <property name="suppressAllComments" value="true" />
+        </commentGenerator>
+
+        <jdbcConnection
+                driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://127.0.0.1:3306/flight_db"
+                userId="root"
+                password="1234">
+        </jdbcConnection>
+        <!-- 默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer，为 true时把JDBC DECIMAL 和 NUMERIC 类型解析为java.math.BigDecimal -->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+        <!-- targetProject:生成POJO类的位置 -->
+        <javaModelGenerator targetPackage="com.xr.entity" targetProject="src/main/java">
+            <!-- enableSubPackages:是否让schema作为包的后缀 -->
+            <property name="enableSubPackages" value="false" />
+            <!-- 从数据库返回的值被清理前后的空格 -->
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+        <!-- targetProject:mapper映射文件生成的位置 -->
+        <sqlMapGenerator targetPackage="resources.mapping" targetProject="src/main/java">
+            <!-- enableSubPackages:是否让schema作为包的后缀 -->
+            <property name="enableSubPackages" value="false" />
+        </sqlMapGenerator>
+        <!-- targetPackage：mapper接口生成的位置 -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.xr.dao" targetProject="src/main/java">
+            <!-- enableSubPackages:是否让schema作为包的后缀 -->
+            <property name="enableSubPackages" value="false" />
+        </javaClientGenerator>
+        <table domainObjectName="Admin" tableName="f_admin" schema=""/>
+
+        <table domainObjectName="AdminLog" tableName="f_admin_log" schema=""/>
+
+        <table domainObjectName="AdminRole" tableName="f_admin_role" schema=""/>
+
+        <table domainObjectName="AirRoute" tableName="f_air_route" schema=""/>
+
+        <table domainObjectName="AircompanytBasicData" tableName="f_aircompanyt_basic_data" schema=""/>
+
+        <table domainObjectName="AircraftBasicData" tableName="f_aircraft_basic_data" schema=""/>
+
+        <table domainObjectName="AirlineCompany" tableName="f_airline_company" schema=""/>
+
+        <table domainObjectName="AirportBasicDdata" tableName="f_airport_basic_data" schema=""/>
+
+        <table domainObjectName="Backup" tableName="f_backup" schema=""/>
+
+        <table domainObjectName="ChannelBasicData" tableName="f_channel_basic_data" schema=""/>
+
+        <table domainObjectName="CheckinBasicData" tableName="f_checkin_basic_data" schema=""/>
+
+        <table domainObjectName="Collection" tableName="f_collection" schema=""/>
+
+        <table domainObjectName="FlightRecord" tableName="f_flight_record" schema=""/>
+
+        <table domainObjectName="FlightReportDay" tableName="f_flight_report_day" schema=""/>
+
+        <table domainObjectName="FlightReportMonthly" tableName="f_flight_report_monthly" schema=""/>
+
+        <table domainObjectName="FlightReportQuarter" tableName="f_flight_report_quarter" schema=""/>
+
+        <table domainObjectName="FlightReportWeekly" tableName="f_flight_report_weekly" schema=""/>
+
+        <table domainObjectName="FlightReportYear" tableName="f_flight_report_year" schema=""/>
+
+        <table domainObjectName="FlightStream" tableName="f_flight_stream" schema=""/>
+
+        <table domainObjectName="GateBasicData" tableName="f_gate_basic_data" schema=""/>
+
+        <table domainObjectName="Menu" tableName="f_menu" schema=""/>
+
+        <table domainObjectName="Passenger" tableName="f_passenger" schema=""/>
+
+        <table domainObjectName="ReasonBasicData" tableName="f_reason_basic_data" schema=""/>
+
+        <table domainObjectName="RecBasicData" tableName="f_rec_basic_data" schema=""/>
+
+        <table domainObjectName="RunwayBasicData" tableName="f_runway_basic_data" schema=""/>
+
+        <table domainObjectName="SeatBasicData" tableName="f_seat_basic_data" schema=""/>
+
+        <table domainObjectName="StatelBasicData" tableName="f_statel_basic_data" schema=""/>
+
+        <table domainObjectName="StatisticsBasicData" tableName="f_statistics_basic_data" schema=""/>
+
+        <table domainObjectName="TaskBasicData" tableName="f_task_basic_data" schema=""/>
+
+        <table domainObjectName="TerminalBasicData" tableName="f_terminal_basic_data" schema=""/>
+
+        <table domainObjectName="TurntableBasicData" tableName="f_turntable_basic_data" schema=""/>
+
+    </context>
+</generatorConfiguration>

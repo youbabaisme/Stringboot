@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xr.dao.AdminLogMapper">
+<select id="selectuser" resultType="map">
+    select a.id,a.username,a.name,a.age,a.qq,a.tel,r.name as rname, a.state,a.add_time from f_admin a,f_admin_role r where a.role_id = r.id
+</select>
+    <select id="queryallrole" resultType="com.xr.entity.AdminRole">
+        select * from f_admin_role
+    </select>
+    <delete id="deleteuser" parameterType="com.xr.entity.Admin">
+            delete from f_admin where id = #{id}
+    </delete>
+    <update id="stopuser">
+        update f_admin set state=0 where id = #{id}
+    </update>
+    <select id="editbyselectid" resultType="int">
+        select id from f_admin_role where name = #{rname}
+    </select>
+    <update id="edit" parameterType="com.xr.entity.Admin">
+        update f_admin set username=#{username},name=#{name},qq=#{qq},tel=#{tel},age=#{age},role_id=#{roleId},add_time=#{add_time} where id = #{id}
+    </update>
+    <insert id="adduser" parameterType="com.xr.entity.Admin">
+         insert into f_admin(username,name,sex,age,qq,tel,role_id) values (#{username},#{name},#{sex},#{age},#{qq},#{tel},#{roleId})
+    </insert>
+    <select id="selectuserwhere" resultType="map">
+        select a.id,a.username,a.name,a.age,a.qq,a.tel,r.name as rname, a.state,a.add_time from f_admin a,f_admin_role r where a.role_id = r.id
+        <if test="username!=null">
+            and username = #{username}
+        </if>
+        <if test="name!=null">
+               and a.name = #{name}
+        </if>
+        <if test="tel!=null">
+                  and tel = #{tel}
+        </if>
+    </select>
+</mapper>

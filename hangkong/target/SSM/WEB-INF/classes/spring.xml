@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/mvc
+						http://www.springframework.org/schema/mvc/spring-mvc.xsd
+						http://www.springframework.org/schema/aop
+						http://www.springframework.org/schema/aop/spring-aop.xsd
+						http://www.springframework.org/schema/tx
+						http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:annotation-config></context:annotation-config>
+    <!--1. 自动扫描com.zking包下所有类中的注解 -->
+    <context:component-scan base-package="com.xr" />
+
+
+
+    <!--2. 开启注解驱动 -->
+    <mvc:annotation-driven />
+
+    <mvc:annotation-driven>
+        <mvc:message-converters register-defaults="true">
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <constructor-arg index="0" value="UTF-8"/>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!--3. 处理静态资源文件，303校验等等（标配，必须写） -->
+    <mvc:default-servlet-handler/>
+    <!--对静态资源文件的访问-->
+    <!--mvc:resources mapping=”/images/**”  location=”/images/” /-->
+    <!--mvc:resources mapping=”/js/**”  location=”/js/” /-->
+    <!--mvc:resources mapping=”/css/**”  location=”/css/” /-->
+
+    <!--4。 加载外部db.properties -->
+    <context:property-placeholder location="classpath*:db.properties"></context:property-placeholder>
+
+    <!--5. 配置数据连接池（数据源） -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <!-- 数据库基本信息配置 -->
+        <property name="driverClassName" value="${jdbc.driver}" />
+        <property name="url" value="${jdbc.url}" />
+        <property name="username" value="${jdbc.user}" />
+        <property name="password" value="${jdbc.password}" />
+        <property name="filters" value="${jdbc.filters}" />
+        <!-- 最大并发连接数 -->
+        <property name="maxActive" value="${pool.maxActive}" />
+        <!-- 初始化连接数量 -->
+        <property name="initialSize" value="${pool.initialSize}" />
+        <!-- 最小空闲连接数 -->
+        <property name="minIdle" value="${pool.minIdle}" />
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="${pool.maxWait}" />
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="${pool.timeBetweenEvictionRunsMillis}" />
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="${pool.minEvictableIdleTimeMillis}" />
+        <property name="validationQuery" value="${pool.validationQuery}" />
+        <property name="testWhileIdle" value="${pool.testWhileIdle}" />
+        <property name="testOnBorrow" value="${pool.testOnBorrow}" />
+        <property name="testOnReturn" value="${pool.testOnReturn}" />
+        <property name="maxOpenPreparedStatements" value="${pool.maxOpenPreparedStatements}" />
+        <!-- 打开removeAbandoned功能 -->
+        <property name="removeAbandoned" value="${pool.removeAbandoned}" />
+        <!-- 1800秒，也就是30分钟 -->
+        <property name="removeAbandonedTimeout" value="${pool.removeAbandonedTimeout}" />
+        <!-- 关闭abanded连接时输出错误日志 -->
+        <property name="logAbandoned" value="${pool.logAbandoned}" />
+    </bean>
+
+    <!--6. 配置SqlSessionFactory-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--6.1 引入数据源-->
+
+        <property name="dataSource" ref="dataSource"></property>
+
+
+        <!--6.2 加载映射文件-->
+        <property name="mapperLocations" value="classpath*:mapping/*.xml"> </property>
+        <!--
+        如果将mapper.xml文件放到resources/mapping目录下，则可以写成：
+        value="classpath*:mapping/*.xml
+        -->
+        <property name="configLocation" value="classpath:Mybatis-config.xml"> </property>
+        <!--6.3 设置别名 -->
+        <property name="typeAliasesPackage" value="com.xr.entity"></property>
+
+        <!--也可以直接 配置MyBatis的配置的文件 -->
+        <!--property name="configLocation" value="classpath:mybatis.xml"></property> -->
+</bean>
+
+        <!--7. 扫描Mapper：向com.zking.dao层映射SqlSessionFactory -->
+<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+<!--向com.zking.dao中的接口注入sqlSessionFactory实例，这样接口可以直接使用该实例 -->
+<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+<property name="basePackage" value="com.xr.dao"></property>
+<!--
+注意,没有必要去指定SqlSessionFactory或 SqlSessionTemplate, 因为 MapperScannerConfigurer 将会创建 MapperFactoryBean,之后自动装配。但是,如果你使用了一个 以上的 DataSource ,那 么自动 装配可 能会失效 。这种 情况下 ,你可以使用 sqlSessionFactoryBeanName 或 sqlSessionTemplateBeanName 属性来设置正确的 bean名称来使用。这就是它如何来配置的,注意 bean 的名称是必须的,而不是 bean 的引用,因 此,value 属性在这里替代通常的 ref:
+-->
+</bean>
+
+        <!--8. 开启Spring事务管理
+        在service的impl中可以使用事务
+         -->
+<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+      <property name="dataSource" ref="dataSource" />
+</bean>
+        <!-- 启用Spring事务注解：
+        在类或方法上使用 @Transactional -->
+<tx:annotation-driven transaction-manager="transactionManager" />
+
+</beans>
